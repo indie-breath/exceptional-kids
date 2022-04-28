@@ -1,19 +1,23 @@
-export default function handler(req: any, res: any) {
-  // Get data submitted in request's body.
-  const body = req.body
+import { PrismaClient } from "@prisma/client"
 
-  // Optional logging to see the responses
-  // in the command line where next.js app is running.
-  console.log('body: ', body)
+const prisma = new PrismaClient();
 
-  // Guard clause checks for first and last name,
-  // and returns early if they are not found
-  if (!body.name || !body.time) {
-    // Sends a HTTP bad request error code
-    return res.status(400).json({ data: 'First or last name not found' })
-  }
+export default async function handler(req: any, res: any) {
+	const body = req.body
+	console.log('body: ', body)
 
-  // Found the name.
-  // Sends a HTTP success code
-  res.status(200).json({ data: `${body.name} ${body.time}` })
+	// Guard clause checks for first and last name,
+	// and returns early if they are not found
+	if (!body.name || !body.time) {
+	  // Sends a HTTP bad request error code
+	return res.status(400).json({ data: 'First or last name not found' })
+	}
+
+	await prisma.booking.create({
+			data: {
+				name: body.name,
+				time: body.time,
+				active: true
+			},
+	})
 }
