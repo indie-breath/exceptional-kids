@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { sha256 } from "js-sha256";
 
 const prisma = new PrismaClient();
 
@@ -7,21 +8,20 @@ export default async function handler(req: any, res: any) {
 	//console.log('body: ', body)
 
 	//checks if the required data is there
-	if (!body.name || !body.date || !body.time) {
-		//sends an error, change to fail page eventually
-		return res.redirect(307, '/')
+	if (!body.name || !body.email || !body.password) {
+		//sends an error
+		res.json("Information Missing")
 	}
 
-	const data = [body.name, body.date + "|" + body.time]
-	res.status(400).json({ data: data })
+	var hash: any = sha256.update(body.password)
+	hash = hash.hex()
 
-	//create the record in the database
-	/*await prisma.booking.create({
+	/*await prisma.user.create({
 		data: {
 			name: body.name,
-			time: body.time,
-			active: true
-		},
+			email: body.email,
+			password: hash
+		}
 	})*/
 
 	//redirects to different page (currently set to home)
