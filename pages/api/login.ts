@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { setCookies } from "cookies-next";
 import { sha256 } from "js-sha256";
 
 const prisma = new PrismaClient();
@@ -26,6 +27,8 @@ export default async function handler(req: any, res: any) {
 		res.json("Incorrect Email or Password")
 	}
 
+	setCookies('login', body.email)
+
 	//redirects to different page (currently set to home)
-	res.redirect(307, '/')
+	res.redirect(307, '/dashboard')
 }

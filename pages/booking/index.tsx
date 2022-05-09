@@ -1,4 +1,3 @@
-import { Navbar } from '../../components/Navbar';
 import Head from 'next/head'
 
 function Booking() {
@@ -7,7 +6,6 @@ function Booking() {
 			<Head>
 				<title>Make a Booking</title>
 			</Head>
-			<Navbar />
 			<div id='booking-form' className="md:flex md:justify-center mb-6">
 				<form action='/api/booking-form' method='post' className="border-solid border-8 border-black rounded-xl p-5 m-5 w-2/5">
 					<div className="p-2">
