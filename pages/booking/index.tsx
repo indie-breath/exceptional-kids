@@ -10,12 +10,11 @@ function Booking() {
 				<form action='/api/booking-form' method='post' className="border-solid border-8 border-black rounded-xl p-5 m-5 w-2/5">
 					<div className="p-2">
 						<label htmlFor='name'>Enter Your Name: </label>
-						<input type={'text'} id='name' name='name' className="shadow-md px-2 w-full" /><br />
+						<input type={'text'} id='name' name='name' className="shadow-md px-2 w-full" />
 					</div>
 					<div className="p-2">
 						<label htmlFor='time'>Enter Time of Booking: </label>
-						<input type={'date'} id='date' name='date' className="shadow-md px-2" />
-						<input type={'time'} id='time' name='time' className="shadow-md px-2" /><br />
+						<input type={'datetime-local'} id='date' name='date' className="shadow-md px-2" />
 					</div>
 					<input type={'submit'} value='Submit' className="p-2 shadow-md relative hover:border" />
 				</form>

@@ -26,6 +26,9 @@ export default async function handler(req: any, res: any) {
 	if (users?.password != hash) {
 		res.json("Incorrect Email or Password")
 	}
+	if (users?.id == 1) {
+		res.redirect(307, '/admin')
+	}
 
 	setCookies('login', body.email)
 
