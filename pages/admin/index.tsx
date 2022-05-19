@@ -12,11 +12,14 @@ export const getServerSideProps = async () => {
 	
 	const user = await prisma.user.findFirst({
 		where: {
-			email: getCookie('login')?.toString()
-		}
+			email: getCookie('login')?.toString(),
+		},
 	})
 
 	const booking = await prisma.booking.findMany({
+		where: {
+			active: true,
+		},
 		orderBy: {
 			time: 'desc',
 		},
@@ -24,7 +27,6 @@ export const getServerSideProps = async () => {
 
 	var temp
 	for (let i = 0; i < booking.length; i++) {
-		var today = new Date()
 		if (new Date(booking[i].time) >= new Date()) {
 			temp = booking[i]
 		}
@@ -33,16 +35,50 @@ export const getServerSideProps = async () => {
 		}
 	}
 
-	const next_booking = temp
-
-	removeCookies('login')
-
-	return { props: { user, next_booking } }
+	
+	//removeCookies('login')
+	
+	if (!temp) {
+		return { props: { user } }
+	}
+	else {
+		const next_booking = [
+			temp?.name,
+			temp?.time.toString(),
+			temp?.comment,
+			temp?.active,
+		]
+		return { props: { user, next_booking } }
+	}
 }
 
 export default function Dashboard({ user, next_booking }: { user: any; next_booking: any; }) {
 	const [open, setOpen] = useState(false)
-	console.log(moment(next_booking.time).format("dddd, MMMM Do YYYY, h:mm:ss a"))
+	
+	const renderNextBooking = () => {
+		if(!next_booking) {
+			return (
+				<div className="relative left-10 top-4">
+					<h2 className="relative left-4 font-bold">Next Booking</h2>
+					<div className="border-4 border-black rounded-md w-1/4 relative top-2 py-2 px-4">
+						<p>No bookings for now...</p>
+					</div>
+				</div>
+			)
+		}
+		else {
+			return (
+				<div className="relative left-10 top-4">
+					<h2 className="relative left-4 font-bold">Next Booking</h2>
+					<div className="border-4 border-black rounded-md w-1/4 relative top-2 py-2 px-4">
+						<p>{next_booking[0]}</p>
+						<p>{moment(new Date(next_booking[1])).format("h:mm a, dddd, MMMM Do YYYY")}</p>
+						<p>{next_booking[2]}</p>
+					</div>
+				</div>
+			)
+		}
+	}
 
 	return (
 		<>
@@ -55,14 +91,7 @@ export default function Dashboard({ user, next_booking }: { user: any; next_book
 				</li>
 			</ul>
 
-			<div className="relative left-10 top-4">
-				<h2 className="relative left-4 font-bold">Next Booking</h2>
-				<div className="border-4 border-black w-1/6 relative top-2 py-2 px-4">
-					<p>{next_booking.name}</p>
-					<p>{moment(next_booking.time).format("h:mm a, dddd, MMMM Do YYYY")}</p>
-					<p>{next_booking.comment}</p>
-				</div>
-			</div>
+			{renderNextBooking()}
 
 			<Transition.Root show={open} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -110,9 +139,10 @@ export default function Dashboard({ user, next_booking }: { user: any; next_book
 												</button>
 											</div>
 										</Transition.Child>
-										<div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+										<div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
 											<div className="relative mt-6 flex-1 px-4 sm:px-6">
 												{/*Edit in this div*/}
+												<Link href={'/record-editor'}><a className="relative hover:text-lg hover:bottom-0.5">Edit a Record</a></Link>
 											</div>
 										</div>
 									</Dialog.Panel>

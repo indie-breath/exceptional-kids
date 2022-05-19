@@ -12,13 +12,11 @@ export default async function handler(req: any, res: any) {
 		return res.redirect(307, '/')
 	}
 
-	const data = [body.name, new Date(body.date)]
-
 	//create the record in the database
 	await prisma.booking.create({
 		data: {
 			name: body.name,
-			time: data[1],
+			time: body.date,
 			active: true
 		},
 	})
