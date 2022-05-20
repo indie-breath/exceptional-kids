@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import moment from "moment";
 import Head from "next/head";
-import { useState } from "react";
+import Link from "next/link";
 
 export const getServerSideProps = async () => {
 	const prisma = new PrismaClient()
@@ -22,6 +21,7 @@ export default function RecordEditor({ booking }: { booking: any; }) {
 			<Head>
 				<title>Edit a Record</title>
 			</Head>
+			<Link href='/admin'><a>Return to dashboard</a></Link>
 			<h1 className="relative left-4 top-3 text-2xl font-bold">Edit a Record</h1>
 			<div className="">
 				<div>
